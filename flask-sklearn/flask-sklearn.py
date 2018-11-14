@@ -3,4 +3,7 @@
 
 # FIXME: put actual code here
 def example():
-    pass
+    print("Hello World!")
+
+
+example()

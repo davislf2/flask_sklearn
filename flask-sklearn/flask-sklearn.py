@@ -1,23 +1,46 @@
-# -*- coding: utf-8 -*-"""Documentation about the flask-sklearn module."""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+This is the example module. This module does stuff.
+"""
+__author__ = ["[Davis Hong](https://github.com/davislf2)"]
+__copyright__ = "Copyright 2018, The Boundary of Knowledge Project"
+__credits__ = "Davis Hong"
+__license__ = "MIT License"
+__version__ = "0.1.0"
+__maintainer__ = "Davis Hong"
+__email__ = "davislf2.net@gmail.com"
+__status__ = "Prototype"
+__date__ = '15/11/2018'
 
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from flask import Flask, request, jsonify
 from sklearn.externals import joblib
 
-# Grab the dataset from scikit-learn
-X, y = datasets.load_iris(return_X_y=True)
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3, random_state=42)
+app = Flask(__name__)
 
-# Build and train the model
-model = RandomForestClassifier(random_state=101)
-model.fit(X_train, y_train)
-print("Score on the training set is: {:2}".format(
-    model.score(X_train, y_train)))
-print("Score on the test set is: {:.2}".format(model.score(X_test, y_test)))
+# Load the model
+MODEL = joblib.load('iris-rf-v1.0.pkl')
+MODEL_LABELS = ['setosa', 'versicolor', 'virginica']
 
-# Save the model
-model_filename = 'iris-rf-v1.0.pkl'
-print("Saving model to {}...".format(model_filename))
-joblib.dump(model, model_filename)
+
+@app.route('/predict')
+def predict():
+    # Retrieve query parameters related to this request.
+    sepal_length = request.args.get('sepal_length')
+    sepal_width = request.args.get('sepal_width')
+    petal_length = request.args.get('petal_length')
+    petal_width = request.args.get('petal_width')
+
+    # Our model expects a list of records
+    features = [[sepal_length, sepal_width, petal_length, petal_width]]
+
+    # Use the model to predict the class
+    label_index = MODEL.predict(features)
+    # Retrieve the iris name that is associated with the predicted class
+    label = MODEL_LABELS[label_index[0]]
+    # Create and send a response to the API caller
+    return jsonify(status='complete', label=label)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

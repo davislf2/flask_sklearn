@@ -2,12 +2,17 @@ atomicwrites==1.2.1
 attrs==18.2.0
 Click==7.0
 Flask==1.0.2
+flask-sklearn==0.1.0
 itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.1.0
 more-itertools==4.3.0
+numpy==1.15.4
 pluggy==0.8.0
 py==1.7.0
 pytest==3.10.1
+scikit-learn==0.20.0
+scipy==1.1.0
 six==1.11.0
+sklearn==0.0
 Werkzeug==0.14.1

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-This is the example module. This module does stuff.
+This module provides flask api for prediction.
 """
 __author__ = ["[Davis Hong](https://github.com/davislf2)"]
 __copyright__ = "Copyright 2018, The Boundary of Knowledge Project"
@@ -25,7 +25,10 @@ MODEL_LABELS = ['setosa', 'versicolor', 'virginica']
 
 @app.route('/predict')
 def predict():
-    # Retrieve query parameters related to this request.
+    """
+    Retrieve query parameters related to this request.
+    :return: predicted json result
+    """
     sepal_length = request.args.get('sepal_length')
     sepal_width = request.args.get('sepal_width')
     petal_length = request.args.get('petal_length')

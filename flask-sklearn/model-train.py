@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-This is the example module. This module does stuff.
+This module train a RF classification model and save through joblib.
 """
 __author__ = ["[Davis Hong](https://github.com/davislf2)"]
 __copyright__ = "Copyright 2018, The Boundary of Knowledge Project"

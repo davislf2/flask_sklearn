@@ -29,10 +29,10 @@ def predict():
     Retrieve query parameters related to this request.
     :return: predicted json result
     """
-    sepal_length = request.args.get('sepal_length')
-    sepal_width = request.args.get('sepal_width')
-    petal_length = request.args.get('petal_length')
-    petal_width = request.args.get('petal_width')
+    sepal_length = request.args.get('sepal_length', default=None, type=float)
+    sepal_width = request.args.get('sepal_width', default=None, type=float)
+    petal_length = request.args.get('petal_length', default=None, type=float)
+    petal_width = request.args.get('petal_width', default=None, type=float)
 
     # Our model expects a list of records
     features = [[sepal_length, sepal_width, petal_length, petal_width]]

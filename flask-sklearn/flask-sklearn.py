@@ -22,6 +22,7 @@ app = Flask(__name__)
 MODEL = joblib.load('iris-rf-v1.0.pkl')
 MODEL_LABELS = ['setosa', 'versicolor', 'virginica']
 
+HTTP_BAD_REQUEST = 400
 
 @app.route('/predict')
 def predict():
@@ -37,8 +38,15 @@ def predict():
     # Our model expects a list of records
     features = [[sepal_length, sepal_width, petal_length, petal_width]]
 
-    # Use the model to predict the class
-    label_index = MODEL.predict(features)
+    try:
+        # Use the model to predict the class
+        label_index = MODEL.predict(features)
+    except Exception as err:
+        message = ('Failed to score the model. Exception: {}'.format(err))
+        response = jsonify(status="error", error_message=message)
+        response.status_code = HTTP_BAD_REQUEST
+        return response
+
     # Retrieve the iris name that is associated with the predicted class
     label = MODEL_LABELS[label_index[0]]
     # Create and send a response to the API caller

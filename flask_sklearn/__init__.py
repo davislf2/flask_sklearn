@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Documentation about flask-sklearn"""
+"""Documentation about flask_sklearn"""
 
 from .__version__ import __version__
 

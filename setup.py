@@ -6,31 +6,30 @@ from setuptools import setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-# To update the package version number, edit flask-sklearn/__version__.py
+# To update the package version number, edit flask_sklearn/__version__.py
 version = {}
-with open(os.path.join(here, 'flask-sklearn', '__version__.py')) as f:
+with open(os.path.join(here, 'flask_sklearn', '__version__.py')) as f:
     exec(f.read(), version)
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
 setup(
-    name='flask-sklearn',
+    name='flask_sklearn',
     version=version['__version__'],
     description="Flask REST API with Scikit-learn",
     long_description=readme + '\n\n',
     author="Davis Hong",
     author_email='davislf2.net@gmail.com',
-    url='https://github.com//flask-sklearn',
+    url='https://github.com//flask_sklearn',
     packages=[
-        'flask-sklearn',
+        'flask_sklearn',
     ],
-    package_dir={'flask-sklearn':
-                 'flask-sklearn'},
+    package_dir={'flask_sklearn': 'flask_sklearn'},
     include_package_data=True,
     license="MIT license",
     zip_safe=False,
-    keywords='flask-sklearn',
+    keywords='flask_sklearn',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -44,7 +43,8 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
-    install_requires=['flask', 'sklearn'],  # FIXME: add your package's dependencies to this list
+    install_requires=['flask', 'sklearn'
+                      ],  # FIXME: add your package's dependencies to this list
     setup_requires=[
         # dependency for `python setup.py test`
         'pytest-runner',
@@ -59,6 +59,5 @@ setup(
         'pycodestyle',
     ],
     extras_require={
-        'dev':  ['prospector[with_pyroma]', 'yapf', 'isort'],
-    }
-)
+        'dev': ['prospector[with_pyroma]', 'yapf', 'isort'],
+    })

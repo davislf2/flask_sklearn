@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# flask-sklearn documentation build configuration file, created by
+# flask_sklearn documentation build configuration file, created by
 # sphinx-quickstart on Wed Nov 14 11:50:47 2018.
 #
 # This file is execfile()d with the current directory set to its
@@ -19,7 +19,7 @@
 import os
 import sys
 
-import flask-sklearn
+import flask_sklearn
 
 here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.abspath(os.path.join(here, '..')))
@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'flask-sklearn'
+project = u'flask_sklearn'
 copyright = u'2018, The Boundary of Knowledge Project'
 author = u"Davis Hong"
 
@@ -86,7 +86,7 @@ todo_include_todos = False
 def run_apidoc(_):
     here = os.path.dirname(__file__)
     out = os.path.abspath(os.path.join(here, 'apidocs'))
-    src = os.path.abspath(os.path.join(here, '..', 'flask-sklearn'))
+    src = os.path.abspath(os.path.join(here, '..', 'flask_sklearn'))
 
     ignore_paths = []
 
@@ -180,7 +180,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'flask-sklearn.tex', u'flask-sklearn Documentation',
+    (master_doc, 'flask_sklearn.tex', u'flask_sklearn Documentation',
      u"Davis Hong", 'manual'),
 ]
 
@@ -190,7 +190,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'flask-sklearn', u'flask-sklearn Documentation',
+    (master_doc, 'flask_sklearn', u'flask_sklearn Documentation',
      [author], 1)
 ]
 
@@ -201,7 +201,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'flask-sklearn', u'flask-sklearn Documentation',
-     author, 'flask-sklearn', "Flask REST API with Scikit-learn",
+    (master_doc, 'flask_sklearn', u'flask_sklearn Documentation',
+     author, 'flask_sklearn', "Flask REST API with Scikit-learn",
      'Miscellaneous'),
 ]

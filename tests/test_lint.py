@@ -8,7 +8,7 @@ import pycodestyle  # formerly known as pep8
 def test_pep8_conformance():
     """Test that we conform to PEP-8."""
     check_paths = [
-        'flask-sklearn',
+        'flask_sklearn',
         'tests',
     ]
     exclude_paths = []
@@ -27,7 +27,8 @@ def test_pep8_conformance():
     success = style.check_files(check_paths).total_errors == 0
 
     if not success:
-        print(textwrap.dedent("""
+        print(
+            textwrap.dedent("""
             Your Python code does not conform to the official Python style
             guide (PEP8), see https://www.python.org/dev/peps/pep-0008
 

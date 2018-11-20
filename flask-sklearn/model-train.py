@@ -25,6 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 # Build and train the model
 model = RandomForestClassifier(random_state=101)
 model.fit(X_train, y_train)
+print("X_train.mean()={}".format(X_train.mean(axis=0)))
 print("Score on the training set is: {:2}".format(
     model.score(X_train, y_train)))
 print("Score on the test set is: {:.2}".format(model.score(X_test, y_test)))

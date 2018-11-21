@@ -40,15 +40,6 @@ def predict():
 
     # Our model expects a list of records
     features = [[sepal_length, sepal_width, petal_length, petal_width]]
-    features_set = {sepal_length, sepal_width, petal_length, petal_width}
-
-    if None in features_set:
-        message = (
-            'Record cannot be scored because of missing or unacceptable values'
-            '. All values must be present and of type float.')
-        response = jsonify(status="error", error_message=message)
-        response.status_code = HTTP_BAD_REQUEST
-        return response
 
     # Use the model to predict the class
     # label_index = MODEL.predict(features)

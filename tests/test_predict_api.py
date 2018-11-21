@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Tests for the flask_sklearn module.
+"""Tests for the predict_api module.
 """
-import pytest
+
 import json
+from pathlib import Path
+
+import pytest
 
 from flask_sklearn.predict_api import app
 
-
-def test_something():
-    assert True
+# It shows ...flask_sklearn/tests/
+DATA_DIR = Path(__file__).parents[0]
 
 
 def test_with_error():
@@ -19,41 +21,38 @@ def test_with_error():
 
 
 # Fixture example
-@pytest.fixture
-def an_object():
-    return {}
+# @pytest.fixture
+# def an_object():
+#     return {}
 
-
-# def test_flask-sklearn(an_object):
+# def test_flask_sklearn(an_object):
 #     assert an_object == {}
 
 
-def test_single_api_call():
+def test_api():
     """
-    Testing a single api get call
+    Testing api get call
     :return:
     """
+    dataset_fname = DATA_DIR.joinpath('testdata_iris_v1.0.json')
 
-    data = {
-        'petal_length': 5.1,
-        'petal_width': 2.3,
-        'sepal_length': 6.9,
-        'sepal_width': 3.1
-    }
-    expected_response = {
-        "label": "virginica",
-        "probabilities": {
-            "setosa": 0.0,
-            "versicolor": 0.2,
-            "virginica": 0.8
-        },
-        "status": "complete"
-    }
-    # Step 1: Set test_client()
+    # Load all the test cases
+    with open(dataset_fname) as f:
+        test_data = json.load(f)
+
+    # Step 1: Set up test_client()
     with app.test_client() as client:
-        # Step 2: Run Code. Test client uses "query_string" instead of "param"
-        response = client.get('/predict', query_string=data)
-        # Step 3: Verify Results
-        assert response.status_code == 200
-        assert json.loads(response.data) == expected_response
+        for test_case in test_data:
+            features = test_case['features']
+            expected_response = test_case['expected_response']
+            expected_status_code = test_case['expected_status_code']
+
+            # Step 2: Run Code.
+            # Test client uses "query_string" instead of "param"
+            response = client.get('/predict', query_string=features)
+
+            # Step 3: Verify Results
+            assert json.loads(response.data) == expected_response
+            assert response.status_code == expected_status_code
+
     # Step 4: Tear Down

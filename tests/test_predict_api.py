@@ -28,13 +28,15 @@ def test_with_error():
 # def test_flask_sklearn(an_object):
 #     assert an_object == {}
 
-
-def test_api():
+@pytest.mark.parametrize('filename',
+                         ['testdata_iris_v1.0.json',
+                          'testdata_iris_missing_v1.0.json'])
+def test_api(filename):
     """
     Testing api get call
     :return:
     """
-    dataset_fname = DATA_DIR.joinpath('testdata_iris_v1.0.json')
+    dataset_fname = DATA_DIR.joinpath(filename)
 
     # Load all the test cases
     with open(dataset_fname) as f:

@@ -19,6 +19,8 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.externals import joblib
+import numpy as np
+# import pandas as pd
 
 MODEL_VERSION = '1.0'
 
@@ -51,6 +53,13 @@ def prep_test_cases(all_features, all_probs, feature_names, target_names):
                 expected_response=expected_response)
         all_test_cases.append(test_case)
     return all_test_cases
+
+
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 
 def train_model():
@@ -98,6 +107,11 @@ def train_model():
                     (1, 3), (2, 3), (0, 1, 2), (0, 1, 3), (0, 2, 3), (1, 2, 3)]
 
     X_mean = X_train.mean(axis=0).round(1)
+    X_train_mean_fname = './flask_sklearn/X_train_mean_iris_v{}.json'\
+        .format(MODEL_VERSION)
+    with open(X_train_mean_fname, 'w') as fp:
+        json.dump(X_mean, fp, cls=NumpyEncoder)
+
     all_features = []
     all_probs = []
     for missing_cols in missing_grps:

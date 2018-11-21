@@ -13,7 +13,9 @@ __email__ = "davislf2.net@gmail.com"
 __status__ = "Prototype"
 __date__ = '15/11/2018'
 
+import json
 from pathlib import Path
+
 from flask import Flask, request, jsonify
 from sklearn.externals import joblib
 
@@ -23,6 +25,7 @@ app = Flask(__name__)
 MODEL_DIR = Path(__file__).parents[0]
 MODEL = joblib.load('iris-rf-v1.0.pkl')
 MODEL_LABELS = ['setosa', 'versicolor', 'virginica']
+MODEL_VERSION = '1.0'
 
 HTTP_BAD_REQUEST = 400
 
@@ -33,9 +36,19 @@ def predict():
     Retrieve query parameters related to this request.
     :return: predicted json result
     """
-    sepal_length = request.args.get('sepal_length', default=5.84, type=float)
-    sepal_width = request.args.get('sepal_width', default=3.01, type=float)
-    petal_length = request.args.get('petal_length', default=3.87, type=float)
+    filename = 'X_train_mean_iris_v{}.json'.format(MODEL_VERSION)
+    dataset_fname = MODEL_DIR.joinpath(filename)
+    X_mean = None
+    with open(dataset_fname) as f:
+        X_mean = json.load(f)
+    print("X_mean", X_mean)
+
+    sepal_length = request.args.get('sepal_length', default=X_mean[0],
+                                    type=float)
+    sepal_width = request.args.get('sepal_width', default=X_mean[1],
+                                   type=float)
+    petal_length = request.args.get('petal_length', default=X_mean[2],
+                                    type=float)
     # CHANGED: Don't impute for petal_width, since it has higher importance
     petal_width = request.args.get('petal_width', default=None, type=float)
 

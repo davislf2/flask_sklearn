@@ -27,17 +27,28 @@ def prep_test_cases(all_features, all_probs, feature_names, target_names):
     all_test_cases = []
     for feat_vec, prob_vec in zip(all_features, all_probs):
         # Drop features that have value == None
-        feat_dict = {name: val for name, val
-                     in zip(feature_names, feat_vec)
-                     if val is not None}
+        feat_dict = {
+            name: val
+            for name, val in zip(feature_names, feat_vec) if val is not None
+        }
         prob_dict = dict(zip(target_names, prob_vec))
         expected_label = target_names[prob_vec.argmax()]
-        expected_response = dict(label=expected_label,
-                                 probabilities=prob_dict,
-                                 status='complete')
-        test_case = dict(features=feat_dict,
-                         expected_status_code=200,
-                         expected_response=expected_response)
+
+        message = ('Record cannot be scored because petal_width '
+                   'is missing or has an unacceptable value.')
+        if not feat_vec[3]:
+            expected_response = dict(status='error', error_message=message)
+            test_case = dict(
+                expected_status_code=400, expected_response=expected_response)
+        else:
+            expected_response = dict(
+                label=expected_label,
+                probabilities=prob_dict,
+                status='complete')
+            test_case = dict(
+                features=feat_dict,
+                expected_status_code=200,
+                expected_response=expected_response)
         all_test_cases.append(test_case)
     return all_test_cases
 
@@ -71,9 +82,7 @@ def train_model():
     # ***** Generate test data *****
     print('Generating test data...')
     all_probs = model.predict_proba(X_test)
-    all_test_cases = prep_test_cases(X_test,
-                                     all_probs,
-                                     feature_names,
+    all_test_cases = prep_test_cases(X_test, all_probs, feature_names,
                                      target_names)
 
     test_data_fname = './tests/testdata_iris_v{}.json'.format(MODEL_VERSION)
@@ -85,11 +94,8 @@ def train_model():
     print('Generating test data with missing values...')
     # Each group refers to the column indexes with missing features.
     # Start with each column by itself, then all pairs, triples...
-    missing_grps = [(0,), (1,), (2,), (3,),
-                    (0, 1), (0, 2), (0, 3),
-                    (1, 2), (1, 3), (2, 3),
-                    (0, 1, 2), (0, 1, 3),
-                    (0, 2, 3), (1, 2, 3)]
+    missing_grps = [(0, ), (1, ), (2, ), (3, ), (0, 1), (0, 2), (0, 3), (1, 2),
+                    (1, 3), (2, 3), (0, 1, 2), (0, 1, 3), (0, 2, 3), (1, 2, 3)]
 
     X_mean = X_train.mean(axis=0).round(1)
     all_features = []
@@ -117,6 +123,10 @@ def train_model():
     with open(test_data_missing_fname, 'w') as fp:
         json.dump(all_test_cases, fp)
     print('testdata_iris_missing_v{}.json generated'.format(MODEL_VERSION))
+
+    # Read the importance of each parameters
+    # print(model.feature_importances_)
+    # [0.08954051 0.02560884 0.36991178 0.51493887]
 
 
 if __name__ == '__main__':

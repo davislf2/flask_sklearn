@@ -36,7 +36,18 @@ def predict():
     sepal_length = request.args.get('sepal_length', default=5.84, type=float)
     sepal_width = request.args.get('sepal_width', default=3.01, type=float)
     petal_length = request.args.get('petal_length', default=3.87, type=float)
-    petal_width = request.args.get('petal_width', default=1.24, type=float)
+    # CHANGED: Don't impute for petal_width, since it has higher importance
+    petal_width = request.args.get('petal_width', default=None, type=float)
+
+    # CHANGED: If this is missing, return an error
+    if petal_width is None:
+        # Provide the caller with feedback on why the record is unscorable.
+        message = ('Record cannot be scored because petal_width '
+                   'is missing or has an unacceptable value.')
+        response = jsonify(status='error', error_message=message)
+        # Sets the status code to 400
+        response.status_code = HTTP_BAD_REQUEST
+        return response
 
     # Our model expects a list of records
     features = [[sepal_length, sepal_width, petal_length, petal_width]]
@@ -49,7 +60,6 @@ def predict():
     probabilities = MODEL.predict_proba(features)[0]
     label_index = probabilities.argmax()
     label = MODEL_LABELS[label_index]
-
     class_probabilities = dict(zip(MODEL_LABELS, probabilities))
     # Create and send a response to the API caller
     return jsonify(

@@ -36,12 +36,10 @@ def predict():
     Retrieve query parameters related to this request.
     :return: predicted json result
     """
-    filename = 'X_train_mean_iris_v{}.json'.format(MODEL_VERSION)
-    dataset_fname = MODEL_DIR.joinpath(filename)
-    X_mean = None
-    with open(dataset_fname) as f:
-        X_mean = json.load(f)
-    print("X_mean", X_mean)
+    try:
+        result = MODEL.predict(request.args)
+    except MODEL.ModelError as err:
+        response
 
     sepal_length = request.args.get('sepal_length', default=X_mean[0],
                                     type=float)

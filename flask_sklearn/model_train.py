@@ -20,7 +20,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.externals import joblib
 import numpy as np
-# import pandas as pd
+
+from .model_wrapper import ModelWrapper
 
 MODEL_VERSION = '1.0'
 
@@ -68,7 +69,8 @@ def train_model():
     X = data['data']
     y = data['target']
     feature_names = [
-        f.replace(' (cm)', '').replace(' ', '_') for f in data['feature_names']
+        f.replace(' (cm)', '').replace(' ', '_')
+        for f in data['feature_names']
     ]
     target_names = data['target_names']
     X_train, X_test, y_train, y_test = train_test_split(
@@ -77,16 +79,24 @@ def train_model():
     # Build and train the model
     model = RandomForestClassifier(random_state=101)
     model.fit(X_train, y_train)
-    # print("X_train.mean()={}".format(X_train.mean(axis=0)))
     print("Score on the training set is: {:2}".format(
         model.score(X_train, y_train)))
     print("Score on the test set is: {:.2}".format(
         model.score(X_test, y_test)))
 
+    X_mean = X_train.mean(axis=0).round(1)
+    feature_defaults = dict(zip(feature_names, X_mean.tolist()))
+    wrapped = ModelWrapper(model_name='iris-rf',
+                           model_version=MODEL_VERSION,
+                           model_object=model,
+                           class_labels=target_names.tolist(),
+                           feature_defaults=feature_defaults)
+
     # Save the model
-    model_filename = 'iris-rf-v1.0.pkl'
+    model_filename = 'iris-rf-v{}.pkl'.format(MODEL_VERSION)
     print("Saving model to {}...".format(model_filename))
-    joblib.dump(model, model_filename)
+    # CHANGED: save wrapped model
+    joblib.dump(wrapped, model_filename)
 
     # ***** Generate test data *****
     print('Generating test data...')
